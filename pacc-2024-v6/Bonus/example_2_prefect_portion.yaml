@@ -1,0 +1,21 @@
+deployments:
+    - name: prod-deployment
+      entrypoint: 102/weather1-flow.py:pipe
+      work_pool:
+          name: prod-pool
+      schedule:
+          interval: 600
+      pull:
+          - prefect.deployments.steps.git_clone:
+                repository: https://github.com/PrefectHQ/pacc-2024-v6.git
+                branch: prod
+                access_token: "{{prefect.blocks.secret.gh-secret}}"
+
+    - name: staging-deployment
+      entrypoint: 102/weather1-flow.py:pipe
+      work_pool:
+          name: staging-pool
+      pull:
+          - prefect.deployments.steps.git_clone:
+                repository: https://github.com/PrefectHQ/pacc-2024-v6.git
+                branch: staging
